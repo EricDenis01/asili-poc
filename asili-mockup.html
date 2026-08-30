@@ -1,0 +1,1298 @@
+<meta charset="utf-8">
+<title>Asili</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Fragment+Mono:ital@0;1&family=Archivo:wght@400;500;600&family=Homemade+Apple&display=swap">
+<style>
+  /* ============ TOKENS — ivory gallery, light-first ============ */
+  :root{
+    --bg:#f3f0e7; --bg-2:#faf8f0; --bg-3:#eae6d8;
+    --ink:#16140f; --ink-dim:#5c5749; --ink-faint:#8f8875;
+    --line:#d8d2c0; --line-2:#c2bba5;
+    --bronze:#8a6b2f; --bronze-soft:rgba(138,107,47,.1);
+    --band-bg:#16140f; --band-ink:#f3f0e7; --band-dim:#a89f8a; --band-line:rgba(243,240,231,.16);
+    --plate:#f7f4eb; --plate-ink:#1a1712;
+    --shadow:0 24px 70px rgba(30,24,10,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#131109; --bg-2:#1a170e; --bg-3:#211d12;
+      --ink:#ebe6d6; --ink-dim:#a89f88; --ink-faint:#746c58;
+      --line:#2c2818; --line-2:#453e28;
+      --bronze:#c09a4a; --bronze-soft:rgba(192,154,74,.12);
+      --band-bg:#ebe6d6; --band-ink:#16140f; --band-dim:#5c5749; --band-line:rgba(22,20,15,.18);
+      --plate:#f7f4eb; --plate-ink:#1a1712;
+      --shadow:0 24px 70px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#131109; --bg-2:#1a170e; --bg-3:#211d12;
+    --ink:#ebe6d6; --ink-dim:#a89f88; --ink-faint:#746c58;
+    --line:#2c2818; --line-2:#453e28;
+    --bronze:#c09a4a; --bronze-soft:rgba(192,154,74,.12);
+    --band-bg:#ebe6d6; --band-ink:#16140f; --band-dim:#5c5749; --band-line:rgba(22,20,15,.18);
+    --plate:#f7f4eb; --plate-ink:#1a1712;
+    --shadow:0 24px 70px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"]{
+    --bg:#f3f0e7; --bg-2:#faf8f0; --bg-3:#eae6d8;
+    --ink:#16140f; --ink-dim:#5c5749; --ink-faint:#8f8875;
+    --line:#d8d2c0; --line-2:#c2bba5;
+    --bronze:#8a6b2f; --bronze-soft:rgba(138,107,47,.1);
+    --band-bg:#16140f; --band-ink:#f3f0e7; --band-dim:#a89f8a; --band-line:rgba(243,240,231,.16);
+    --plate:#f7f4eb; --plate-ink:#1a1712;
+    --shadow:0 24px 70px rgba(30,24,10,.12);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Archivo','Helvetica Neue',Arial,sans-serif;
+    font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--bronze); color:var(--bg)}
+  a{color:inherit}
+  button{font-family:inherit; cursor:pointer; background:none; border:0; color:inherit}
+  :focus-visible{outline:1.5px solid var(--bronze); outline-offset:3px}
+
+  .wrap{max-width:1240px; margin:0 auto; padding-inline:clamp(20px,4.5vw,56px)}
+  .anton{font-family:'Anton','Archivo Narrow',sans-serif; font-weight:400}
+  .serif{font-family:'Cormorant Garamond',Georgia,serif}
+  .mono{font-family:'Fragment Mono','Courier New',monospace}
+
+  .micro{
+    font-family:'Fragment Mono',monospace; font-size:.64rem; letter-spacing:.24em;
+    text-transform:uppercase; color:var(--ink-dim);
+  }
+  .micro b{color:var(--bronze); font-weight:400}
+
+  /* ============ TOP BAR ============ */
+  .top{
+    position:sticky; top:0; z-index:60; background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .top-in{display:flex; align-items:center; gap:1.6rem; padding:.85rem clamp(20px,4.5vw,56px)}
+  .top-brand{font-family:'Anton',sans-serif; font-size:1rem; letter-spacing:.14em; text-decoration:none}
+  .top-nav{display:flex; gap:1.5rem; margin-left:auto; align-items:center}
+  .top-nav a:not(.boxed){
+    text-decoration:none; font-family:'Fragment Mono',monospace; font-size:.62rem;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--ink-dim);
+  }
+  .top-nav a:not(.boxed):hover{color:var(--ink)}
+  .boxed{
+    display:inline-block; border:1px solid var(--ink); padding:.5rem 1.1rem;
+    font-family:'Fragment Mono',monospace; font-size:.62rem; letter-spacing:.2em;
+    text-transform:uppercase; text-decoration:none; color:var(--ink);
+    transition:background .2s, color .2s; white-space:nowrap; background:transparent;
+  }
+  .boxed:hover{background:var(--ink); color:var(--bg)}
+  .boxed.fill{background:var(--ink); color:var(--bg)}
+  .boxed.fill:hover{background:var(--bronze); border-color:var(--bronze)}
+  @media (max-width:900px){ .top-nav a:not(.boxed){display:none} }
+
+  /* ============ HERO ============ */
+  .hero{position:relative; min-height:92vh; display:flex; flex-direction:column; border-bottom:1px solid var(--line); overflow:hidden}
+  .hero-mid{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; gap:1.1rem; padding:3rem clamp(20px,4.5vw,56px) 1rem; position:relative;
+  }
+  .hero-mid .micro{max-width:60ch; line-height:2.1}
+  .scribble{
+    font-family:'Homemade Apple',cursive; color:var(--bronze); font-size:1.05rem;
+    transform:rotate(-2.5deg); margin-top:-.2rem;
+  }
+  .scanstatus{
+    font-family:'Fragment Mono',monospace; font-size:.6rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--ink-faint); min-height:1.4em;
+    display:flex; align-items:center; gap:.6em; justify-content:center;
+  }
+  .scanstatus::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--bronze); animation:pulse 2.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+  .wordmark-zone{position:relative; padding:0 4px}
+  .wordmark-zone > div{text-align:center; line-height:0}
+  .wordmark{
+    font-family:'Anton',sans-serif; text-transform:uppercase; line-height:.83;
+    letter-spacing:.015em; white-space:nowrap; display:inline-block;
+    font-size:20vw; margin:0; user-select:none;
+  }
+  .scanline{
+    position:absolute; left:0; right:0; height:1px; background:var(--bronze); opacity:.85;
+    box-shadow:0 0 14px 2px var(--bronze-soft); top:0; animation:scan 7s linear infinite; pointer-events:none;
+  }
+  @media (prefers-reduced-motion: reduce){ .scanline{display:none} .scanstatus::before{animation:none; opacity:1} }
+  @keyframes scan{0%{top:2%; opacity:0} 6%{opacity:.85} 94%{opacity:.85} 100%{top:98%; opacity:0}}
+  .hero-foot{border-top:1px solid var(--line)}
+  .hero-foot .cols{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
+  }
+  .hero-foot .cols > div{background:var(--bg); padding:1rem clamp(14px,2vw,24px)}
+  .hero-foot .k{font-family:'Anton',sans-serif; font-size:1.05rem; letter-spacing:.04em; text-transform:uppercase}
+  .hero-foot .v{font-family:'Fragment Mono',monospace; font-size:.6rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint); margin-top:.25rem}
+  @media (max-width:760px){ .hero-foot .cols{grid-template-columns:repeat(2,1fr)} .wordmark{font-size:26vw} .hero{min-height:80vh} }
+
+  /* ============ TICKER ============ */
+  .ticker{border-bottom:1px solid var(--line); overflow:hidden; padding:.62rem 0; background:var(--bg)}
+  .ticker-track{display:flex; gap:2.6rem; white-space:nowrap; width:max-content; animation:mq 80s linear infinite}
+  .ticker span{font-family:'Fragment Mono',monospace; font-size:.62rem; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-dim)}
+  .ticker span i{font-style:normal; color:var(--bronze); margin-left:2.6rem}
+  @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){ .ticker-track{animation:none} }
+
+  /* ============ SECTIONS ============ */
+  .sec{padding-block:clamp(5.5rem,12vh,9rem)}
+  .sec + .sec{border-top:1px solid var(--line)}
+  .label{
+    font-family:'Fragment Mono',monospace; font-size:.62rem; letter-spacing:.3em;
+    text-transform:uppercase; color:var(--ink-faint); display:flex; align-items:center; gap:1rem; margin:0 0 1.6rem;
+  }
+  .label::after{content:""; height:1px; background:var(--line); flex:1}
+  .sec h2{
+    font-family:'Anton',sans-serif; font-weight:400; text-transform:uppercase;
+    font-size:clamp(2.1rem,4.6vw,3.6rem); line-height:1.02; letter-spacing:.01em;
+    margin:0 0 1.2rem; max-width:20ch; text-wrap:balance;
+  }
+  .lede{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.25rem,2vw,1.55rem);
+    line-height:1.5; color:var(--ink-dim); max-width:34em; margin:0 0 3rem;
+  }
+  .lede b, .lede strong{color:var(--ink); font-weight:500}
+
+  .rv{opacity:0; transform:translateY(12px); transition:opacity .7s ease, transform .7s ease}
+  .rv.on{opacity:1; transform:none}
+  @media (prefers-reduced-motion: reduce){ .rv{opacity:1; transform:none; transition:none} }
+
+  /* ============ INSTRUMENT (analysis) ============ */
+  .picker{display:flex; flex-wrap:wrap; gap:1.4rem; margin-bottom:2rem}
+  .picker button{
+    font-family:'Fragment Mono',monospace; font-size:.62rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ink-faint); padding:.2rem 0; border-bottom:1px solid transparent;
+  }
+  .picker button:hover{color:var(--ink)}
+  .picker button[aria-pressed="true"]{color:var(--ink); border-bottom-color:var(--bronze)}
+
+  .instrument{
+    display:grid; grid-template-columns:.85fr 1.15fr; border:1px solid var(--line-2);
+    background:var(--bg-2); box-shadow:var(--shadow);
+  }
+  @media (max-width:900px){ .instrument{grid-template-columns:1fr} }
+  .inst-plate{padding:clamp(1.4rem,3vw,2.4rem); border-right:1px solid var(--line)}
+  @media (max-width:900px){ .inst-plate{border-right:0; border-bottom:1px solid var(--line)} }
+  .plate-frame{position:relative}
+  .plate-frame canvas{width:100%; aspect-ratio:1/1; display:block; border:1px solid var(--line-2)}
+  .plate-frame::before, .plate-frame::after{
+    content:""; position:absolute; width:14px; height:14px; border:1px solid var(--bronze); pointer-events:none;
+  }
+  .plate-frame::before{top:-5px; left:-5px; border-right:0; border-bottom:0}
+  .plate-frame::after{bottom:-5px; right:-5px; border-left:0; border-top:0}
+  .plate-cap{margin-top:1rem}
+  .fields{width:100%; border-collapse:collapse; margin-top:1.1rem}
+  .fields td{
+    font-family:'Fragment Mono',monospace; font-size:.68rem; padding:.5rem 0;
+    border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink);
+  }
+  .fields td:first-child{color:var(--ink-faint); letter-spacing:.18em; font-size:.58rem; text-transform:uppercase; width:40%; padding-right:1rem}
+
+  .inst-data{padding:clamp(1.4rem,3vw,2.4rem); display:flex; flex-direction:column; gap:1.35rem; min-width:0}
+  .inst-head{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem}
+  .inst-head h3{font-family:'Anton',sans-serif; font-weight:400; font-size:1.7rem; letter-spacing:.02em; text-transform:uppercase; margin:0; line-height:1.1}
+  .inst-head .by{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; color:var(--ink-dim); margin:.3rem 0 0}
+  .ai-tag{
+    font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.22em; color:var(--bronze);
+    border:1px solid var(--bronze); padding:.4rem .7rem; white-space:nowrap; flex:none;
+  }
+  .inst-wave{width:100%; height:56px; display:block}
+  .inst-grid{display:grid; grid-template-columns:170px 1fr; gap:clamp(1.2rem,2.5vw,2.2rem); align-items:start}
+  @media (max-width:560px){ .inst-grid{grid-template-columns:1fr} }
+  .print-box canvas{width:170px; height:170px; display:block}
+  .print-box .plate-cap{margin-top:.4rem; text-align:center}
+  .datacol{display:flex; flex-direction:column; gap:.95rem; min-width:0}
+  .readout{display:flex; flex-wrap:wrap; gap:1.4rem; font-family:'Fragment Mono',monospace; font-size:.68rem; letter-spacing:.1em}
+  .readout span{color:var(--ink-faint)} .readout b{color:var(--ink); font-weight:400}
+  .gauge .t{display:flex; justify-content:space-between; font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:.35rem}
+  .gauge .t b{color:var(--bronze); font-weight:400}
+  .gauge .bar{height:1px; background:var(--line-2); position:relative}
+  .gauge .bar i{position:absolute; left:0; top:-1px; height:3px; background:var(--bronze); display:block}
+  .moods{display:flex; flex-wrap:wrap; gap:.4rem .9rem}
+  .moods span{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--ink-dim)}
+  .moods span::before{content:"— "; color:var(--bronze)}
+  .analysis-txt{
+    margin:0; font-size:.92rem; color:var(--ink-dim); border-left:1px solid var(--bronze);
+    padding-left:1.1rem; min-height:4.5em;
+  }
+  .analysis-txt .cursor{display:inline-block; width:.5em; border-bottom:2px solid var(--bronze); margin-left:2px; animation:pulse 1s steps(2) infinite}
+  .placement{font-family:'Fragment Mono',monospace; font-size:.64rem; letter-spacing:.08em; color:var(--ink)}
+  .placement em{font-style:normal; color:var(--ink-faint); letter-spacing:.22em; text-transform:uppercase; font-size:.56rem; margin-right:.8em}
+
+  /* ============ REGISTRY ============ */
+  .filters{display:flex; flex-wrap:wrap; gap:.4rem 1.1rem; align-items:baseline; margin-bottom:.4rem}
+  .filters .lbl{font-family:'Fragment Mono',monospace; font-size:.58rem; letter-spacing:.26em; color:var(--ink-faint); text-transform:uppercase; margin-right:.4rem}
+  .filters button{
+    font-family:'Fragment Mono',monospace; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-faint); padding:.15rem 0; border-bottom:1px solid transparent;
+  }
+  .filters button:hover{color:var(--ink)}
+  .filters button[aria-pressed="true"]{color:var(--bronze); border-bottom-color:var(--bronze)}
+  .count{font-family:'Fragment Mono',monospace; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:1.2rem 0 0}
+  .count b{color:var(--bronze); font-weight:400}
+
+  .registry{border-top:1px solid var(--line-2); margin-top:1rem}
+  .row{
+    display:grid; grid-template-columns:3.2rem 1fr auto; gap:1.2rem; align-items:baseline;
+    width:100%; text-align:left; padding:.95rem .4rem; border-bottom:1px solid var(--line);
+    transition:background .15s;
+  }
+  .row:hover{background:var(--bg-2)}
+  .row .no{font-family:'Fragment Mono',monospace; font-size:.6rem; letter-spacing:.12em; color:var(--ink-faint)}
+  .row .tt{font-family:'Anton',sans-serif; font-weight:400; font-size:1.06rem; letter-spacing:.03em; text-transform:uppercase; line-height:1.2}
+  .row .tt small{
+    display:block; font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:400;
+    font-size:.95rem; text-transform:none; letter-spacing:0; color:var(--ink-dim); margin-top:.1rem;
+  }
+  .row .meta{font-family:'Fragment Mono',monospace; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); text-align:right; line-height:1.9}
+  .row .meta b{color:var(--ink); font-weight:400}
+  .row .meta .genre{color:var(--bronze)}
+  .row[aria-pressed="true"]{background:var(--bg-2)}
+  .row[aria-pressed="true"] .no{color:var(--bronze)}
+  @media (max-width:640px){ .row{grid-template-columns:2.2rem 1fr} .row .meta{display:none} }
+
+  /* ============ STEMS ============ */
+  .stems-box{border:1px solid var(--line-2); background:var(--bg-2); box-shadow:var(--shadow)}
+  .stems-head{display:flex; flex-wrap:wrap; align-items:center; gap:1.2rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--line)}
+  .play{
+    width:44px; height:44px; border:1px solid var(--ink); border-radius:50%;
+    display:grid; place-items:center; font-size:.8rem; transition:background .2s,color .2s; flex:none;
+  }
+  .play:hover{background:var(--ink); color:var(--bg)}
+  .stems-head .t{margin-right:auto}
+  .stems-head .t .anton{font-size:1.15rem; letter-spacing:.03em; text-transform:uppercase}
+  .stems-head .t .serif{font-style:italic; color:var(--ink-dim); font-size:1rem}
+  .lanes{position:relative}
+  .lane{display:grid; grid-template-columns:170px 1fr 120px; align-items:center; gap:1.4rem; padding:.8rem 1.6rem; border-bottom:1px solid var(--line)}
+  .lane:last-child{border-bottom:0}
+  @media (max-width:700px){ .lane{grid-template-columns:100px 1fr 106px; gap:.8rem} }
+  .lane .nm{font-family:'Fragment Mono',monospace; font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-dim)}
+  .lane .fmt{display:block; font-family:'Fragment Mono',monospace; font-size:.54rem; letter-spacing:.1em; color:var(--ink-faint); margin-top:.3rem}
+  .lane canvas{width:100%; height:40px; display:block}
+  .lane.muted canvas{opacity:.12}
+  .lane .ctl{display:flex; gap:.4rem; justify-content:flex-end}
+  .lane .ctl button{
+    font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.16em;
+    border:1px solid var(--line-2); color:var(--ink-dim); padding:.3rem .6rem; transition:all .15s;
+  }
+  .lane .ctl button:hover{border-color:var(--ink); color:var(--ink)}
+  .lane .ctl button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--bg)}
+  .playhead{position:absolute; top:0; bottom:0; width:1px; background:var(--bronze); left:0; opacity:0; pointer-events:none}
+  .stems-foot{display:flex; flex-wrap:wrap; gap:1.2rem; align-items:center; justify-content:space-between; padding:1.1rem 1.6rem; border-top:1px solid var(--line)}
+  .stems-foot p{margin:0; font-size:.84rem; color:var(--ink-dim); max-width:52ch}
+
+  /* ============ BUYERS ============ */
+  .aud{display:grid; grid-template-columns:repeat(5,1fr); border-top:1px solid var(--line-2)}
+  @media (max-width:950px){ .aud{grid-template-columns:1fr 1fr} }
+  @media (max-width:560px){ .aud{grid-template-columns:1fr} }
+  .aud > div{padding:1.5rem 1.4rem 1.7rem 0; border-bottom:1px solid var(--line)}
+  .aud h3{font-family:'Anton',sans-serif; font-weight:400; font-size:.95rem; letter-spacing:.06em; text-transform:uppercase; margin:0 0 .6rem}
+  .aud h3::before{content:""; display:block; width:22px; height:1px; background:var(--bronze); margin-bottom:.9rem}
+  .aud p{margin:0; font-size:.82rem; color:var(--ink-dim)}
+  .uses{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(1.6rem,4vw,3.5rem); margin-top:4rem}
+  @media (max-width:880px){ .uses{grid-template-columns:1fr} }
+  .use-col h3{font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500; font-size:1.45rem; margin:0 0 .7rem; color:var(--ink)}
+  .use-col p{margin:0; color:var(--ink-dim); font-size:.88rem}
+
+  /* ============ PROCESS ============ */
+  .steps{border-top:1px solid var(--line-2)}
+  .step{
+    display:grid; grid-template-columns:5rem 1fr 1.6fr; gap:clamp(1rem,3vw,3rem);
+    padding:2rem .4rem; border-bottom:1px solid var(--line); align-items:baseline;
+  }
+  @media (max-width:760px){ .step{grid-template-columns:3rem 1fr; } .step p{grid-column:2} }
+  .step .n{font-family:'Anton',sans-serif; font-size:1.6rem; color:var(--bronze); letter-spacing:.04em}
+  .step h3{font-family:'Anton',sans-serif; font-weight:400; font-size:1.15rem; letter-spacing:.04em; text-transform:uppercase; margin:0}
+  .step p{margin:0; font-size:.88rem; color:var(--ink-dim); max-width:56ch}
+
+  /* ============ LICENSING ============ */
+  .tiers{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-2); border:1px solid var(--line-2)}
+  @media (max-width:880px){ .tiers{grid-template-columns:1fr} }
+  .tier{background:var(--bg-2); padding:2rem 1.8rem; display:flex; flex-direction:column; position:relative}
+  .tier.hot::before{
+    content:"MOST LICENSED"; position:absolute; top:0; right:0;
+    font-family:'Fragment Mono',monospace; font-size:.52rem; letter-spacing:.24em;
+    background:var(--bronze); color:var(--bg-2); padding:.35rem .7rem;
+  }
+  .tier h3{font-family:'Anton',sans-serif; font-weight:400; font-size:1.5rem; letter-spacing:.04em; text-transform:uppercase; margin:0}
+  .tier .pr{font-family:'Fragment Mono',monospace; font-size:.72rem; letter-spacing:.1em; color:var(--bronze); margin:.6rem 0 .4rem}
+  .tier .who{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--ink-dim); margin:0 0 1.4rem}
+  .tier ul{list-style:none; margin:0 0 1.8rem; padding:0; display:flex; flex-direction:column; gap:.6rem}
+  .tier li{font-size:.84rem; color:var(--ink-dim); padding-left:1.3rem; position:relative}
+  .tier li::before{content:"◆"; position:absolute; left:0; top:.34em; color:var(--bronze); font-size:.5rem}
+  .tier .boxed{margin-top:auto; text-align:center}
+  .rates-note{font-family:'Fragment Mono',monospace; font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin-top:1.6rem; line-height:2; max-width:80ch}
+
+  /* ============ RIGHTS BAND ============ */
+  .band{background:var(--band-bg); color:var(--band-ink)}
+  .band .label{color:var(--band-dim)}
+  .band .label::after{background:var(--band-line)}
+  .band h2{color:var(--band-ink)}
+  .band .lede{color:var(--band-dim)}
+  .band .lede b{color:var(--band-ink)}
+  .rh{display:grid; grid-template-columns:.9fr 1.1fr; gap:clamp(2rem,5vw,4.5rem); align-items:start}
+  @media (max-width:900px){ .rh{grid-template-columns:1fr} }
+  .rh-points{list-style:none; margin:2rem 0 0; padding:0}
+  .rh-points li{
+    padding:.85rem .2rem; font-size:.9rem; color:var(--band-ink);
+    border-top:1px solid var(--band-line); display:flex; gap:1rem; align-items:baseline;
+  }
+  .rh-points li::before{content:"◆"; color:var(--bronze); font-size:.55rem; flex:none}
+  .dash{border:1px solid var(--band-line)}
+  .dash-head{display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.9rem 1.3rem; border-bottom:1px solid var(--band-line)}
+  .dash-head .t{font-family:'Fragment Mono',monospace; font-size:.58rem; letter-spacing:.24em; text-transform:uppercase; color:var(--band-dim)}
+  .dash-head .live{font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.2em; color:var(--bronze)}
+  .dash-tbl{width:100%; border-collapse:collapse; font-size:.76rem}
+  .dash-tbl th{
+    text-align:left; font-family:'Fragment Mono',monospace; font-size:.54rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--band-dim); font-weight:400; padding:.55rem .8rem; border-bottom:1px solid var(--band-line);
+  }
+  .dash-tbl td{padding:.7rem .8rem; border-bottom:1px solid var(--band-line); vertical-align:top; color:var(--band-ink)}
+  .dash-tbl th:first-child, .dash-tbl td:first-child{padding-left:1.3rem}
+  .dash-tbl th:last-child, .dash-tbl td:last-child{padding-right:1.3rem}
+  .dash-tbl td:first-child b{font-weight:600}
+  .dash-tbl td:first-child small{display:block; color:var(--band-dim); font-size:.66rem}
+  .dash-tbl .num{font-family:'Fragment Mono',monospace; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .dash-tbl .share{color:var(--bronze)}
+  .pill{font-family:'Fragment Mono',monospace; font-size:.52rem; letter-spacing:.16em; padding:.25rem .5rem; white-space:nowrap; border:1px solid}
+  .pill.paid{color:var(--bronze); border-color:var(--bronze)}
+  .pill.nego{color:var(--band-ink); border-color:var(--band-line)}
+  .dash-split{padding:1.1rem 1.3rem}
+  .dash-split .t{display:flex; justify-content:space-between; font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.2em; text-transform:uppercase; color:var(--band-dim); margin-bottom:.55rem}
+  .splitbar{display:flex; height:3px}
+  .splitbar .a{background:var(--bronze); width:50%}
+  .splitbar .b{background:var(--band-dim); width:50%}
+  .dash-split .legend{display:flex; gap:1.6rem; margin-top:.6rem; font-family:'Fragment Mono',monospace; font-size:.6rem; color:var(--band-dim)}
+  .dash-split .legend i{display:inline-block; width:7px; height:7px; margin-right:.5em}
+  .dash-split .legend .li-a i{background:var(--bronze)} .dash-split .legend .li-b i{background:var(--band-dim)}
+  .dash-foot{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; padding:1rem 1.3rem; border-top:1px solid var(--band-line)}
+  .dash-foot .l{font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.2em; text-transform:uppercase; color:var(--band-dim)}
+  .dash-foot .v{font-family:'Anton',sans-serif; font-size:1.5rem; color:var(--bronze); letter-spacing:.03em}
+
+  /* ============ SPOTLIGHTS ============ */
+  .spots{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(1.4rem,3vw,2.6rem)}
+  @media (max-width:880px){ .spots{grid-template-columns:1fr} }
+  .spot canvas{width:100%; aspect-ratio:4/5; display:block; border:1px solid var(--line-2)}
+  .spot .meta{font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.22em; text-transform:uppercase; color:var(--bronze); margin:1.1rem 0 .3rem}
+  .spot h3{font-family:'Anton',sans-serif; font-weight:400; font-size:1.2rem; letter-spacing:.03em; text-transform:uppercase; margin:0 0 .5rem; line-height:1.2}
+  .spot p{margin:0; font-size:.85rem; color:var(--ink-dim)}
+
+  /* ============ STORY ============ */
+  .story{display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(2rem,5vw,4.5rem)}
+  @media (max-width:880px){ .story{grid-template-columns:1fr} }
+  .story p{color:var(--ink-dim); font-size:.95rem; max-width:58ch; margin:0 0 1.2rem}
+  .story p b{color:var(--ink); font-weight:600}
+  .ethic{border:1px solid var(--bronze); padding:2rem 1.8rem; align-self:start}
+  .ethic h3{font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500; font-size:1.5rem; margin:0 0 .8rem; color:var(--bronze)}
+  .ethic p{margin:0; color:var(--ink-dim); font-size:.88rem; max-width:none}
+
+  /* ============ CTA ============ */
+  .cta{border-top:1px solid var(--line); text-align:center}
+  .cta-in{padding-block:clamp(6rem,14vh,10rem); display:flex; flex-direction:column; align-items:center; gap:1.4rem}
+  .cta h2{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:400;
+    font-size:clamp(2.6rem,6.5vw,4.6rem); margin:0; line-height:1.1; letter-spacing:-.01em;
+  }
+  .cta .sub{max-width:52ch; color:var(--ink-dim); font-size:.95rem; margin:0}
+  .cta form{display:flex; gap:0; width:min(480px,90%); border-bottom:1px solid var(--ink); margin-top:.6rem}
+  .cta input{
+    flex:1; min-width:0; background:transparent; border:0; color:var(--ink);
+    font-family:'Fragment Mono',monospace; font-size:.78rem; letter-spacing:.06em; padding:.9rem .2rem;
+  }
+  .cta input::placeholder{color:var(--ink-faint)}
+  .cta input:focus{outline:none}
+  .cta form .boxed{border-bottom:0; align-self:center}
+
+  /* ============ FOOTER ============ */
+  footer{border-top:1px solid var(--line); padding:3rem 0 2.5rem; color:var(--ink-faint)}
+  .foot{display:flex; flex-wrap:wrap; gap:2.5rem; justify-content:space-between; align-items:flex-start}
+  .foot .fm{font-family:'Anton',sans-serif; font-size:1.5rem; letter-spacing:.1em}
+  .foot .tg{font-family:'Homemade Apple',cursive; font-size:.85rem; color:var(--bronze); margin-top:.5rem; transform:rotate(-2deg); display:inline-block}
+  .foot nav{display:flex; gap:1.6rem; flex-wrap:wrap}
+  .foot nav a{
+    text-decoration:none; font-family:'Fragment Mono',monospace; font-size:.58rem;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--ink-dim);
+  }
+  .foot nav a:hover{color:var(--bronze)}
+  .disclaimer{
+    margin-top:3rem; padding-top:1.3rem; border-top:1px solid var(--line);
+    font-family:'Fragment Mono',monospace; font-size:.56rem; letter-spacing:.12em; line-height:2.2; text-transform:uppercase;
+  }
+
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(8px);
+    background:var(--ink); color:var(--bg); font-family:'Fragment Mono',monospace; font-size:.66rem;
+    letter-spacing:.08em; padding:.8rem 1.2rem; opacity:0; pointer-events:none;
+    transition:opacity .25s, transform .25s; z-index:99; max-width:92vw; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <a class="top-brand" href="#top">ASILI</a>
+    <nav class="top-nav" aria-label="Main">
+      <a href="#analysis">Analysis</a>
+      <a href="#registry">Registry</a>
+      <a href="#stems">Stems</a>
+      <a href="#licensing">Licensing</a>
+      <a href="#rights">Rights holders</a>
+      <a href="#story">Story</a>
+      <a class="boxed" href="#access">Request access</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-mid">
+    <p class="micro">Connecting Africa's musical heritage &amp; contemporary talent<br>with global creative demand</p>
+    <span class="scribble">est. 1958 — now.</span>
+    <p class="scanstatus"><span id="scanTxt">INITIALISING ARCHIVE…</span></p>
+  </div>
+  <div class="wordmark-zone">
+    <div style="position:relative">
+      <h1 class="wordmark" id="wordmark">ASILI</h1>
+      <div class="scanline" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="cols">
+      <div><div class="k">1,204 works</div><div class="v">Ingested &amp; enriched</div></div>
+      <div><div class="k">17 countries</div><div class="v">Heritage &amp; contemporary</div></div>
+      <div><div class="k">1958 — now</div><div class="v">Tape era to this week</div></div>
+      <div><div class="k">100% cleared</div><div class="v">Stems on every track</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
+
+<!-- ============ ANALYSIS ============ -->
+<section class="sec" id="analysis">
+  <div class="wrap">
+    <p class="label rv">The intelligence</p>
+    <h2 class="rv">Every reel, read deeply.</h2>
+    <p class="lede rv">
+      Our AI listens the way a supervisor does — then goes further. Mood and emotion, tempo and key,
+      energy and instrumentation: an advanced taxonomy that turns thousands of hours of tape into a
+      searchable instrument. <b>Type a feeling, get a record.</b>
+    </p>
+    <div class="picker rv" id="featPicker" role="tablist" aria-label="Featured tracks"></div>
+    <div class="instrument rv" id="instrument">
+      <div class="inst-plate">
+        <div class="plate-frame"><canvas id="dArt" width="680" height="680" aria-hidden="true"></canvas></div>
+        <p class="plate-cap micro" id="plateCap"></p>
+        <table class="fields"><tbody id="dFields"></tbody></table>
+      </div>
+      <div class="inst-data">
+        <div class="inst-head">
+          <div>
+            <h3 id="dTitle"></h3>
+            <p class="by" id="dArtist"></p>
+          </div>
+          <span class="ai-tag">AI ANALYSIS · v2.4</span>
+        </div>
+        <canvas class="inst-wave" id="dWave" height="56" aria-hidden="true"></canvas>
+        <div class="inst-grid">
+          <div class="print-box">
+            <canvas id="dRadar" width="340" height="340"></canvas>
+            <p class="plate-cap micro" style="letter-spacing:.18em">Emotional print</p>
+          </div>
+          <div class="datacol">
+            <div class="readout" id="dKv"></div>
+            <div class="gauge"><div class="t"><span>Energy</span><b id="dEnV"></b></div><div class="bar"><i id="dEnB"></i></div></div>
+            <div class="gauge"><div class="t"><span>Danceability</span><b id="dDaV"></b></div><div class="bar"><i id="dDaB"></i></div></div>
+            <div class="moods" id="dMoods"></div>
+          </div>
+        </div>
+        <p class="analysis-txt" id="dAnalysis"></p>
+        <p class="placement"><em>Suggested placement</em><span id="dSync"></span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REGISTRY ============ -->
+<section class="sec" id="registry">
+  <div class="wrap">
+    <p class="label rv">The registry</p>
+    <h2 class="rv">Dig four decades — and this week.</h2>
+    <p class="lede rv">
+      A curated selection of heritage recordings and contemporary African productions, chosen for
+      <b>quality, cultural relevance and artistic value</b> — researched, rights-identified and enriched,
+      so an international audience can discover, explore, license and collaborate.
+    </p>
+    <div class="filters rv" id="regionFilters"><span class="lbl">Region</span></div>
+    <div class="filters rv" id="eraFilters"><span class="lbl">Era</span></div>
+    <div class="filters rv" id="moodFilters"><span class="lbl">Mood</span></div>
+    <p class="count rv" id="count"></p>
+    <div class="registry rv" id="grid"></div>
+  </div>
+</section>
+
+<!-- ============ STEMS ============ -->
+<section class="sec" id="stems">
+  <div class="wrap">
+    <p class="label rv">Stem separation</p>
+    <h2 class="rv">Pull the tape apart.</h2>
+    <p class="lede rv">
+      Source separation tuned for tape-era recordings lifts vocals, drums, bass and melodic instruments
+      out of mono masters — clean, labelled, key-matched. <b>What was frozen on reel-to-reel for fifty
+      years is now yours to rearrange.</b>
+    </p>
+    <div class="stems-box rv">
+      <div class="stems-head">
+        <button class="play" id="playBtn" aria-label="Play preview"><span id="playIcon">▶</span></button>
+        <div class="t">
+          <div class="anton">Copperbelt Woman</div>
+          <div class="serif">Mukuba Lightning · Kitwe, Zambia, 1976</div>
+        </div>
+        <span class="micro">112 BPM · E MINOR · 4 STEMS</span>
+      </div>
+      <div class="lanes" id="lanes"><div class="playhead" id="playhead"></div></div>
+      <div class="stems-foot">
+        <p>Preview updates as you mute and solo. Stems export as 24-bit WAV, tempo-mapped and tagged for your DAW.</p>
+        <a class="boxed" href="#licensing">Download stems</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BUYERS ============ -->
+<section class="sec" id="foryou">
+  <div class="wrap">
+    <p class="label rv">Who digs here</p>
+    <h2 class="rv">One archive. Five doors in.</h2>
+    <div class="aud rv" id="audRow"></div>
+    <div class="uses rv">
+      <div class="use-col">
+        <h3>Cleared before you ask.</h3>
+        <p>Every track carries pre-cleared master and publishing rights, verified chain of title and
+        one-click licensing paperwork. No six-week clearance limbo, no mystery estates. Search by mood,
+        preview in context, license the same afternoon.</p>
+      </div>
+      <div class="use-col">
+        <h3>Built for the booth.</h3>
+        <p>Tempo-mapped, key-tagged and BPM-sorted, the catalogue is engineered for edit work.
+        Download extended sections, loop-ready passages and full stems under a single edit license —
+        the original artists get paid every time.</p>
+      </div>
+      <div class="use-col">
+        <h3>Sample at the source.</h3>
+        <p>Stop clearing samples backwards. Dig with producer-grade filters — key, tempo, texture, mood —
+        pull separated stems, and clear your flip before the beat is finished. Provenance documented,
+        splits handled.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="sec" id="how">
+  <div class="wrap">
+    <p class="label rv">How a catalogue joins</p>
+    <h2 class="rv">From vault to the world.</h2>
+    <div class="steps rv" id="stepsRow"></div>
+  </div>
+</section>
+
+<!-- ============ LICENSING ============ -->
+<section class="sec" id="licensing">
+  <div class="wrap">
+    <p class="label rv">Licensing</p>
+    <h2 class="rv">Transparent rates. No mystery.</h2>
+    <p class="lede rv">
+      Pricing scales with usage, medium and territory — published up front, so a bedroom producer and
+      a global agency both know exactly where they stand.
+    </p>
+    <div class="tiers rv" id="tiersRow"></div>
+    <p class="rates-note rv">Rates are indicative and scale by campaign size, duration, territory and media · Every license splits 50/50 with the rights holder · Custom quotes in 48h</p>
+  </div>
+</section>
+
+<!-- ============ RIGHTS BAND ============ -->
+<section class="sec band" id="rights">
+  <div class="wrap">
+    <div class="rh">
+      <div>
+        <p class="label rv">For rights holders</p>
+        <h2 class="rv">Bring us your catalogue. Keep your control.</h2>
+        <p class="lede rv" style="margin-bottom:0">
+          A label's vault, a family estate, one artist's life work: we digitize and restore every
+          recording, enrich it with world-class metadata, clear the rights and sell licenses on five
+          continents. Nothing is signed without you. <b>Your masters stay yours; we put them to work.</b>
+        </p>
+        <ul class="rh-points rv">
+          <li>Transparent per-license tracking in your dashboard</li>
+          <li>50/50 revenue share — no hidden deductions</li>
+          <li>You approve every deal before it closes</li>
+          <li>Quarterly payouts with full statements</li>
+        </ul>
+      </div>
+      <div class="dash rv" aria-label="Example rights holder revenue dashboard">
+        <div class="dash-head">
+          <span class="t">Rights holder dashboard · Q3 2026</span>
+          <span class="live">● LIVE</span>
+        </div>
+        <div style="overflow-x:auto">
+        <table class="dash-tbl">
+          <thead><tr><th>Track / use</th><th>Territory</th><th class="num">Fee</th><th class="num">Your share</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>Nzela Na Ngai</b><small>Streaming campaign · beverage brand</small></td>
+              <td>EU</td><td class="num">€4,200</td><td class="num share">€2,100</td>
+              <td><span class="pill paid">PAID</span></td>
+            </tr>
+            <tr>
+              <td><b>Jaiva Tonight</b><small>Fashion film · online &amp; social</small></td>
+              <td>Worldwide</td><td class="num">€790</td><td class="num share">€395</td>
+              <td><span class="pill paid">PAID</span></td>
+            </tr>
+            <tr>
+              <td><b>Sinjiya</b><small>Documentary feature · festival run</small></td>
+              <td>N. America</td><td class="num">€1,500</td><td class="num share">€750</td>
+              <td><span class="pill nego">TO APPROVE</span></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="dash-split">
+          <div class="t"><span>Revenue split</span><span>50 / 50</span></div>
+          <div class="splitbar"><div class="a"></div><div class="b"></div></div>
+          <div class="legend">
+            <span class="li-a"><i></i>Rights holder — €3,245</span>
+            <span class="li-b"><i></i>Platform — €3,245</span>
+          </div>
+        </div>
+        <div class="dash-foot">
+          <span class="l">Next payout · Oct 15, 2026</span>
+          <span class="v">€3,245</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPOTLIGHTS ============ -->
+<section class="sec" id="context">
+  <div class="wrap">
+    <p class="label rv">Cultural context</p>
+    <h2 class="rv">Not a track list. A destination.</h2>
+    <p class="lede rv">
+      Every catalogue arrives with its story — the scenes, cities and lives behind the sound —
+      researched with rights holders and presented alongside the music.
+    </p>
+    <div class="spots rv" id="spotsRow"></div>
+  </div>
+</section>
+
+<!-- ============ STORY ============ -->
+<section class="sec" id="story">
+  <div class="wrap">
+    <p class="label rv">The story</p>
+    <h2 class="rv">From vault to living archive.</h2>
+    <div class="story rv">
+      <div>
+        <p>
+          ASILI began with reel-to-reel tapes rescued from defunct label vaults, national radio archives
+          and family storerooms across the continent — recordings that survived heat, humidity and history.
+          Each reel is <b>digitized at archival grade</b>, restored by engineers who respect the hiss, and
+          returned to the world searchable, licensable and alive.
+        </p>
+        <p>
+          Alongside the heritage collections, a new generation of African producers publishes directly into
+          the archive — so the platform spans <b>from independence-era dancehalls to this week's sessions</b>.
+          The goal is simple: reactivate Africa's musical heritage, create new economic opportunities for
+          rights holders and artists, and put African music further into the global creative spotlight.
+        </p>
+      </div>
+      <div class="ethic">
+        <h3>The source gets paid.</h3>
+        <p>
+          Every license splits revenue back to the original artists, their families and their estates —
+          tracked transparently, paid quarterly. Nothing enters the archive without documented provenance
+          and consent from rights holders. This is repatriation by royalty statement, not extraction
+          with better branding.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta" id="access">
+  <div class="wrap cta-in">
+    <p class="label rv" style="justify-content:center">Proof of concept<span style="display:none"></span></p>
+    <h2 class="rv">Hear it first.</h2>
+    <p class="sub rv">
+      We're opening the catalogue to a first circle of music supervisors, agencies, DJs and producers —
+      and to rights holders with catalogues that deserve a second life.
+    </p>
+    <form class="rv" id="ctaForm">
+      <input type="email" placeholder="your@studio.com" aria-label="Email address">
+      <button class="boxed fill" type="submit">Request access</button>
+    </form>
+    <p class="micro rv">Supervisors · Agencies · Labels · Estates · DJs · Producers</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="fm">ASILI</div>
+        <span class="tg">every sound has an origin.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="#analysis">Analysis</a>
+        <a href="#registry">Registry</a>
+        <a href="#stems">Stems</a>
+        <a href="#licensing">Licensing</a>
+        <a href="#rights">Rights holders</a>
+        <a href="#story">Story</a>
+      </nav>
+    </div>
+    <p class="disclaimer">
+      Proof-of-concept mockup · All artist names, tracks, labels and figures are fictional placeholder
+      content for demonstration · Genres, eras and musical contexts are real · “ASILI” is a working title
+    </p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ================= DATA ================= */
+const TRACKS = [
+  {title:"Ìjọba Kò Gbọ́",artist:"Ayọ Okunola & the Surulere Express",year:1974,country:"Nigeria",city:"Lagos",genre:"Afrobeat",label:"Apapa Records",bpm:119,key:"E minor",duration:"11:42",moods:["defiant","hypnotic","simmering","righteous"],instruments:["tenor sax","baritone sax","trumpet","tenor guitar","organ","congas","shekere"],energy:85,danceability:88,analysis:"A slow-boil one-chord vamp built on a skeletal tenor-guitar ostinato and clipped horn stabs, withholding the full brass theme until past the four-minute mark before erupting into chanted call-and-response. Raw desk mix with audible room bleed gives it a charged, documentary-era grit.",syncUse:"Protest montage, gritty street-culture documentary"},
+  {title:"Ayé Ń Yí",artist:"Chief Bọ́lá Ọṣúnwálé & His Rainbow Rhythm Aces",year:1979,country:"Nigeria",city:"Ibadan",genre:"Juju",label:"Olumo Discs",bpm:108,key:"G major",duration:"8:56",moods:["celebratory","flowing","warm","communal"],instruments:["talking drum","pedal steel","interlocking electric guitars","shekere","agogo"],energy:68,danceability:76,analysis:"Liquid pedal-steel lines glide over three interlocking guitars while the talking drum trades phrases with the praise-singing chorus, the whole medley loping forward in a warm, unbroken swell.",syncUse:"Family reunion scene, feel-good ensemble comedy"},
+  {title:"Ɔdɔ Refrɛ Me",artist:"Osei Kwame & the Meridian Dance Band",year:1963,country:"Ghana",city:"Accra",genre:"Dance-band highlife",label:"Adinkra Records",bpm:102,key:"F major",duration:"3:05",moods:["romantic","breezy","nostalgic","elegant"],instruments:["muted trumpet","alto sax","clarinet","hollow-body guitar","double bass","claves"],energy:52,danceability:68,analysis:"Ballroom-era highlife with a crooned Twi lead floating over muted trumpet and clave, the horn section answering in soft two-bar sighs. Mono tape warmth places it squarely in the independence-era dancehall.",syncUse:"Period romance, cocktail-hour flashback"},
+  {title:"Obra Yɛ Dɛn",artist:"Yaw Darko & the Ahenfo Guitar Band",year:1977,country:"Ghana",city:"Kumasi",genre:"Guitar-band highlife",label:"Nkonsonkonson Records",bpm:94,key:"A minor",duration:"6:48",moods:["bittersweet","aching","smoky","hypnotic"],instruments:["interlocking guitars","organ","bass","clave","male chorus"],energy:44,danceability:55,analysis:"Minor-key guitar figures circle each other over a patient, swaying pulse while a grief-worn lead vocal meditates on hardship, the organ pooling underneath like low light.",syncUse:"End credits, bittersweet character study"},
+  {title:"Jàmm Rekk",artist:"Ibrahima Mbaye et l'Étoile de Médina",year:1982,country:"Senegal",city:"Dakar",genre:"Mbalax",label:"Sunu Disques",bpm:128,key:"D minor",duration:"5:37",moods:["exuberant","urgent","kinetic","proud"],instruments:["sabar drums","tama","electric guitar","synthesizer","timbales"],energy:92,danceability:90,analysis:"Volleys of sabar and tama detonate across a Latin-tinged guitar-and-synth bed, the drums repeatedly wrenching the groove sideways while a high, keening vocal rides the turbulence. Explosive percussive breaks make natural edit points.",syncUse:"High-energy sportswear edit, fashion runway"},
+  {title:"Sinjiya",artist:"Mariam Diakité",year:1978,country:"Mali",city:"Bamako",genre:"Wassoulou",label:"Éditions Badala",bpm:84,key:"G minor",duration:"7:15",moods:["earthy","yearning","ancestral","intimate"],instruments:["kamele ngoni","calabash","karignan","flute","female chorus"],energy:38,danceability:45,analysis:"A looping pentatonic ngoni figure and soft calabash pulse in a rolling 12/8, carrying a smoke-dark female voice answered by a distant chorus. Sparse, close-miked and trance-inducing — the track breathes rather than builds.",syncUse:"Dawn landscape aerials, heritage brand film"},
+  {title:"Mansa Fôli",artist:"Sankaran Jazz de Faranah",year:1972,country:"Guinea",city:"Conakry",genre:"Mande big-band",label:"Éditions Voix de la Révolution",bpm:98,key:"C minor",duration:"9:04",moods:["majestic","solemn","brooding","cinematic"],instruments:["trumpet section","tenor sax","twin guitars","balafon","congas"],energy:58,danceability:56,analysis:"State-orchestra grandeur: a balafon-patterned guitar arpeggio anchors slow-massing horn fanfares while a griot lead delivers long declamatory lines, swelling in stately terraces toward a triumphant final chorus.",syncUse:"Historical epic, procession or coronation scene"},
+  {title:"Nzela Na Ngai",artist:"Orchestre Super Lipopo",year:1976,country:"DR Congo",city:"Kinshasa",genre:"Soukous / rumba",label:"Éditions Bana Kin",bpm:134,key:"A major",duration:"8:22",moods:["euphoric","sparkling","buoyant","romantic"],instruments:["lead guitar","mi-solo guitar","rhythm guitar","cavacha drums","trumpet"],energy:88,danceability:94,analysis:"Opens as a honeyed two-voice rumba before shifting gears at 3:40 into a glittering sebene, three guitars braiding filigree lines over the galloping cavacha snare. The long instrumental back half is a ready-made bed for edits and loops.",syncUse:"Sun-drenched beverage spot, rooftop party scene"},
+  {title:"Muna Mbenge",artist:"Léopold Ewandé",year:1980,country:"Cameroon",city:"Douala",genre:"Makossa",label:"Wouri Disques",bpm:122,key:"D minor",duration:"5:48",moods:["slick","sunny","urbane","confident"],instruments:["rubbery bass","funk guitar","horn section","string synth","cabasa"],energy:80,danceability:86,analysis:"A rubbery, melodic bassline leads from the front over sixteenth-note cabasa and clipped funk guitar, with horn punches and analog string pads giving it a glossy late-disco sheen.",syncUse:"Retro-styled automotive city spot"},
+  {title:"Yelelit Guzo (Night Journey)",artist:"Dawit Mengesha Sextet",year:1971,country:"Ethiopia",city:"Addis Ababa",genre:"Ethio-jazz",label:"Nigat Records",bpm:96,key:"C minor",duration:"4:12",moods:["smoky","nocturnal","brooding","cosmopolitan"],instruments:["tenor sax","vibraphone","Farfisa organ","upright bass","congas"],energy:55,danceability:62,analysis:"A serpentine tenor sax line coils over a five-note Amharic mode while vibraphone and Farfisa trade ghostly comping, the rhythm section holding a slow-rolling groove that never fully resolves. A 2am hotel-bar haze that reads instantly as vintage Addis.",syncUse:"Neo-noir title sequence, slow-burn crime drama"},
+  {title:"Tezeta (Yene Abeba)",artist:"Almaz Tessema",year:1974,country:"Ethiopia",city:"Addis Ababa",genre:"Tezeta ballad",label:"Sheba Sound",bpm:62,key:"D minor",duration:"5:38",moods:["nostalgic","aching","tender","wistful"],instruments:["female vocal","accordion","krar","washint flute","brushed drums"],energy:20,danceability:15,analysis:"A bare, weeping vocal floats over accordion drones and sparse krar arpeggios in the tezeta 'song of longing' mode, with the band barely breathing beneath her. Minimal arc, maximum ache.",syncUse:"Farewell scene, prestige drama or memory-driven documentary"},
+  {title:"Nyar Kisumu",artist:"Ochieng Owino & the Nyanza Melody Kings",year:1975,country:"Kenya",city:"Kisumu",genre:"Benga",label:"Simba Sauti Records",bpm:128,key:"E major",duration:"3:45",moods:["joyful","sprinting","sunny","buoyant"],instruments:["interlocking guitars","melodic bass","drum kit","Dholuo vocals"],energy:85,danceability:92,analysis:"Two bright, needle-fine guitars chase each other in nyatiti-derived patterns while a hyperactive melodic bass carries the tune as much as the vocals do. A mid-song key lift plays like a burst of sunlight.",syncUse:"Sun-drenched travel or telecom spot, feel-good montage"},
+  {title:"Mahaba ya Bahari",artist:"Bi Mwanaisha Salum & Nyota za Pwani",year:1968,country:"Tanzania",city:"Stone Town, Zanzibar",genre:"Taarab",label:"Sauti ya Unguja",bpm:84,key:"G minor",duration:"6:20",moods:["oceanic","courtly","yearning","stately"],instruments:["oud","qanun","violin section","ney flute","dumbek"],energy:35,danceability:38,analysis:"A full coastal orchestra sways in unison behind an ornamented Swahili vocal, maqam-inflected violins and qanun shimmering like light on water. Slow, ceremonial and deeply romantic, with a mono tape patina of salt air.",syncUse:"Period romance, opening aerial over an old port city"},
+  {title:"Copperbelt Woman",artist:"Mukuba Lightning",year:1976,country:"Zambia",city:"Kitwe",genre:"Zamrock",label:"Kwacha Discs",bpm:112,key:"E minor",duration:"4:55",moods:["gritty","swaggering","psychedelic","raw"],instruments:["fuzz guitar","wah guitar","overdriven bass","cowbell"],energy:88,danceability:72,analysis:"Blown-out fuzz riffing collides with a rolling Zambian groove — heavier than funk, looser than metal — under a half-shouted bilingual hook. The breakdown at 2:40 strips to drums, bass and wah chatter: an open invitation for edits.",syncUse:"Gritty sneaker or motorcycle spot, heist-film needle drop"},
+  {title:"Gomo Rinotaura",artist:"Tendai Marowa & the Pungwe Stars",year:1984,country:"Zimbabwe",city:"Harare",genre:"Chimurenga",label:"Pamberi Sounds",bpm:120,key:"G major",duration:"5:47",moods:["hypnotic","resolute","ancestral","cyclical"],instruments:["mbira-picked guitars","mbira dzavadzimu","hosho","Shona chorus"],energy:70,danceability:76,analysis:"Interlocked guitars transcribe mbira cycles into a rippling 12/8 lattice, hosho shakers driving a trance that builds by accumulation rather than dynamics — struggle music that glows.",syncUse:"Resilience-themed brand film, documentary closing credits"},
+  {title:"Woza Msombuluko",artist:"Zodwa & the Jabulani Sisters",year:1969,country:"South Africa",city:"Johannesburg",genre:"Mbaqanga",label:"Egoli Sounds",bpm:122,key:"C major",duration:"2:58",moods:["buoyant","strutting","cheeky","communal"],instruments:["groaner vocal","female harmonies","picked lead guitar","alto sax","organ"],energy:82,danceability:88,analysis:"A gravel-deep groaner trades phrases with tight, gleaming female harmonies over a springy three-chord vamp and one of the bounciest basslines in the catalogue. Two-fifty-eight of pure township swagger, cut hot to a 45 with zero fat.",syncUse:"Upbeat retail or beverage spot, ensemble-comedy montage"},
+  {title:"Jaiva Tonight",artist:"Thandi V",year:1987,country:"South Africa",city:"Soweto",genre:"Bubblegum synth-pop",label:"Shukuma Records",bpm:116,key:"F minor",duration:"5:10",moods:["neon","exuberant","glossy","infectious"],instruments:["DX7 synth brass","drum machine","synth bass","gated snare"],energy:90,danceability:95,analysis:"Minor-key synth stabs and a chrome-plated drum-machine groove frame a powerhouse vocal that flips melancholy chords into pure dancefloor euphoria — the signature bubblegum trick. The 12-inch mix carries a long instrumental outro tailor-made for DJ edits.",syncUse:"Retro-futurist fashion campaign, 80s-set party scene"},
+  {title:"Layl El Bhar",artist:"Maâlem Brahim Zouani",year:1979,country:"Morocco",city:"Essaouira",genre:"Gnawa",label:"Disques Mogador",bpm:102,key:"A minor",duration:"7:42",moods:["trance","nocturnal","devotional","smoldering"],instruments:["guembri","qraqeb","tbel drum","call-and-response vocals"],energy:65,danceability:58,analysis:"A low, elastic guembri riff anchors clattering qraqeb polyrhythms as call-and-response chants slowly tighten and accelerate over seven minutes — a ceremonial arc from murmur to full trance. Its bass pattern loops like a proto-house groove.",syncUse:"Immersive brand film, art-house thriller tension"},
+  {title:"Emakhaya (Log Drum Prayer)",artist:"Sgubhu Avenue feat. Nolwazi K",year:2023,country:"South Africa",city:"Pretoria",genre:"Amapiano",label:"Yano District Records",bpm:112,key:"C# minor",duration:"6:42",moods:["hypnotic","soulful","late-night","uplifting"],instruments:["log drum","shakers","jazzy electric piano","sub bass","vocal chops"],energy:68,danceability:92,analysis:"Slow-burn amapiano built on a rolling log-drum bassline and airy Rhodes voicings, with a 90-second percussion-only intro that makes for clean edit points. Vocal phrases are sparse and melismatic, leaving wide mid-range space for dialogue or voiceover.",syncUse:"Premium streetwear campaign, golden-hour city montage"},
+  {title:"Amanzi Phansi",artist:"Themba Deep",year:2025,country:"South Africa",city:"Johannesburg",genre:"3-step / Afro-house",label:"Third Motion Recordings",bpm:118,key:"A minor",duration:"7:08",moods:["driving","spiritual","cinematic","brooding"],instruments:["broken-kick pattern","tribal percussion","analog stabs","choir pads","processed chant"],energy:78,danceability:88,analysis:"A 3-step arrangement that drops the second kick for a limping, tension-heavy groove, resolving into a full four-on-the-floor payoff at 3:40 — a natural sync moment for a reveal. Dark choir pads and a pitched-down Zulu chant give it ritualistic weight.",syncUse:"Automotive launch film, prestige sports-drama trailer"},
+  {title:"Soft Eyes (Eko Interlude)",artist:"Dara Onyx",year:2021,country:"Nigeria",city:"Lagos",genre:"Alté / Afro-fusion",label:"Mainland Honey",bpm:98,key:"B minor",duration:"3:24",moods:["dreamy","intimate","hazy","romantic"],instruments:["palmwine guitar","lo-fi drum machine","analog bass","falsetto vocals","tape-saturated keys"],energy:46,danceability:71,analysis:"Hazy alté cut blending palmwine guitar phrasing with a swung lo-fi beat, sung in a code-switching mix of English and Yoruba with heavy tape saturation. Dynamics stay flat and low — an ideal bed for lifestyle content that needs mood without competing with narration.",syncUse:"Fashion editorial film, perfume spot, indie coming-of-age scene"},
+  {title:"Ehad n Agadez",artist:"Taghlamt Assouf",year:2022,country:"Niger",city:"Agadez",genre:"Tuareg desert rock",label:"Ténéré Tapes",bpm:132,key:"E minor",duration:"5:51",moods:["hypnotic","defiant","vast","raw"],instruments:["overdriven guitar","tende drum","calabash","handclaps","Tamashek vocals"],energy:84,danceability:62,analysis:"Fast triplet-feel desert rock with interlocking pentatonic guitar lines that build from a lone riff to a full-band trance, recorded live with minimal overdubs. The raw room sound and accelerating clap patterns read as authentic and urgent — strong for widescreen landscape and endurance narratives.",syncUse:"Adventure documentary, off-road vehicle ad, open-world game"},
+  {title:"Tizita Voltage",artist:"Addis Circuit Orchestra",year:2024,country:"Ethiopia",city:"Addis Ababa",genre:"Contemporary Ethio-groove",label:"Piassa Frequency",bpm:102,key:"D minor",duration:"4:47",moods:["mysterious","groovy","nocturnal","melancholic"],instruments:["krar","washint flute","baritone sax","Moog-style synth","Rhodes","12/8 drums"],energy:66,danceability:76,analysis:"Modern Ethio-groove riding a 12/8 shuffle in the tizita scale, where a krar-and-synth unison hook trades phrases with smoky baritone sax over a dubbed-out rhythm section. A distinctive, clearance-simple alternative to generic 'world funk' cues.",syncUse:"Neo-noir heist sequence, specialty coffee brand film"},
+  {title:"Gbaka Turbo",artist:"DJ Wôyô",year:2024,country:"Côte d'Ivoire",city:"Abidjan",genre:"Coupé-décalé",label:"Nouchi Wave",bpm:126,key:"F minor",duration:"3:12",moods:["explosive","joyful","cheeky","festive"],instruments:["programmed percussion","synth brass","talking-drum samples","hype vocals","sub bass"],energy:93,danceability:96,analysis:"Peak-time coupé-décalé driven by rapid-fire talking-drum programming, blaring synth brass and Nouchi call-and-response hype vocals, mixed loud and bright. Eight-bar phrase structure and constant vocal punctuation make it easy to cut to fast comedic or sports edits.",syncUse:"Football montage, mobile-game trailer, high-energy telecom spot"},
+  {title:"Kaxexe",artist:"Elias Kanda e os Astros do Prenda",year:1973,country:"Angola",city:"Luanda",genre:"Semba",label:"Discos Kissanga",bpm:112,key:"D major",duration:"4:18",moods:["swaying","festive","wry","warm"],instruments:["dikanza scraper","ngoma drums","nylon guitar","electric bass","trumpet"],energy:74,danceability:86,analysis:"Independence-eve semba riding the dikanza's ratchet and a strolling nylon-string melody, the trumpet answering the singer's wry Kimbundu verses like a second voice. Loose, live-room energy with handclaps bleeding into every mic.",syncUse:"Street-carnival scene, heritage travel film"},
+  {title:"Noite da Ilha",artist:"Lúcia Mavinga",year:1988,country:"Angola",city:"Luanda",genre:"Kizomba",label:"Edições Kianda",bpm:92,key:"B minor",duration:"5:24",moods:["sultry","tender","tropical","slow-dance"],instruments:["drum machine","synth bass","clean guitar","layered keys","soft female vocal"],energy:48,danceability:74,analysis:"Late-80s kizomba glide: a drum-machine sway under liquid guitar fills and close-miked vocal warmth, halfway between semba's lilt and zouk's shimmer. The long instrumental passages sit beautifully under dialogue.",syncUse:"Beachfront romance, evening-light fragrance spot"},
+  {title:"Batida do Musseque",artist:"DJ Zango & Puto Fogo",year:2023,country:"Angola",city:"Luanda",genre:"Kuduro",label:"Musseque Digital",bpm:140,key:"F minor",duration:"2:58",moods:["explosive","raw","swaggering","festive"],instruments:["distorted drum programming","chopped vocal shouts","synth stabs","sub bass"],energy:95,danceability:93,analysis:"Raw kuduro at full sprint — clipped drum programming, shouted refrains and siren-like synth stabs cut with sudden half-time drops built for choreography. Mixed loud, zero fat, made for fifteen-second cuts.",syncUse:"Sneaker drop, football hype reel, game trailer"}
+];
+
+const SPOTLIGHTS = [
+  {artist:"Kwesi Amankwah & His Coastline Dance Band", origin:"Accra, Ghana", era:"1967–1979", story:"Amankwah led one of the tightest guitar-band outfits on Accra's nightclub circuit, his interlocking palm-wine guitar lines trading choruses with a three-piece horn section through the optimistic years after independence. The master tapes, presumed lost when the band's label folded in 1980, were recovered from a family storeroom in Osu and restored for this catalogue."},
+  {artist:"Zewditu Getahun", origin:"Addis Ababa, Ethiopia", era:"1971–1977", story:"In the last golden years of Addis Ababa's nightlife, Getahun's voice drifted over slow-burning tezeta — the Amharic blues of longing — carried by smoky Farfisa organ and muted brass. She cut only nine sides before curfews silenced the capital's club scene. The surviving 45s and session reels, digitized here for the first time, capture one of the era's great unheralded voices at full power."},
+  {artist:"Katlego \"Kat Motion\" Dlamini", origin:"Soweto, Johannesburg", era:"2019–present", story:"Dlamini builds tracks the Soweto way: patient eight-minute arrangements at 112 BPM, gospel-schooled piano voicings hovering over the genre's signature log-drum bass. He came up burning CDs for taxi-rank DJs before his bootlegs surfaced in festival sets abroad. His fully cleared stems have become raw material for edits from Lagos to London — proof that amapiano travels best when its makers travel with it."}
+];
+
+const AUDIENCES = [
+  {name:"Advertising", line:"Sounds no competitor has touched, cleared for global campaigns in days — with a real story behind every track to match your brand's."},
+  {name:"Film & TV", line:"Period-authentic recordings and contemporary scores with verified chain of title, so sync clearance never stalls your edit."},
+  {name:"Games", line:"Stems, loops, and precise BPM and key data built for adaptive audio engines — soundtrack living worlds with living music."},
+  {name:"Fashion", line:"Runway and campaign selections curated by mood and era, from 1970s Accra brass to Johannesburg's midnight piano."},
+  {name:"DJs & Producers", line:"Legally cleared stems and samples from heritage masters — build on the source, and the originators share in every royalty."}
+];
+
+const STEPS = [
+  {title:"Agreement & rights", body:"Every catalogue journey starts with a clear, plain-language agreement: we verify ownership and chain of title together and set the terms of our 50/50 partnership. You retain ownership of your masters at all times — we earn the right to represent them."},
+  {title:"AI enrichment", body:"We digitize and restore every recording to modern broadcast standards, then our AI pipeline maps each track's mood, genre, BPM, key and instrumentation. A box of unlabeled reels becomes a searchable catalogue any music supervisor can navigate in seconds."},
+  {title:"Curation & context", body:"Our editors research each recording's history and write the cultural context that gives it meaning — the scene, the city, the moment it captured. Tracks are placed into curated collections where the right buyers actually discover them."},
+  {title:"International sales", body:"We pitch your catalogue to advertising agencies, studios, game developers and fashion houses worldwide — and you approve every license before it is signed. Payouts arrive quarterly, with a per-license statement showing exactly who used what, where, and for how much."}
+];
+
+const TIERS = [
+  {name:"Crate", price:"from €150 / track", who:"Producers, beatmakers and DJs making edits, flips and reworks", hot:false, feats:[
+    "Full separated stems (vocals, drums, bass, melodic)",
+    "Pre-cleared master + publishing for one release",
+    "Tempo-mapped, key-tagged WAV delivery",
+    "Automatic royalty split to original artists"]},
+  {name:"Screen", price:"from €500 / use", who:"Brands, agencies and studios licensing for online video and social", hot:true, feats:[
+    "Worldwide web + social sync, 1-year term",
+    "Instant license agreement and cue sheet",
+    "AI-matched alternates in the same mood and tempo",
+    "Stems included for re-edit to picture"]},
+  {name:"Marquee", price:"from €3,500 / quote", who:"Supervisors placing TVC, broadcast, film and global campaigns", hot:false, feats:[
+    "All-media broadcast, theatrical and streaming rights",
+    "Dedicated clearance specialist, 48-hour turnaround",
+    "Early access to newly digitized vault material",
+    "Custom stem and restoration delivery to spec"]}
+];
+
+const GENRES = ["Highlife","Soukous","Ethio-jazz","Mbalax","Zamrock","Benga","Taarab","Mbaqanga","Gnawa","Wassoulou","Chimurenga","Makossa","Juju","Bubblegum","Afrobeat","Semba","Kizomba","Kuduro","Amapiano","Alté","Desert rock","3-Step","Coupé-décalé"];
+
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const REGION = c => {
+  const west = ["Nigeria","Ghana","Senegal","Mali","Guinea","Côte d'Ivoire","Burkina Faso","Niger"];
+  const central = ["Cameroon","DR Congo","Congo","Gabon"];
+  const east = ["Ethiopia","Kenya","Tanzania","Uganda","Somalia"];
+  const south = ["Zambia","Zimbabwe","South Africa","Mozambique","Botswana","Angola"];
+  if(west.some(x=>c.includes(x))) return "West";
+  if(central.some(x=>c.includes(x))) return "Central";
+  if(east.some(x=>c.includes(x))) return "East";
+  if(south.some(x=>c.includes(x))) return "Southern";
+  return "North";
+};
+const ERA = y => y < 1970 ? "’58–’69" : y < 1980 ? "’70s" : y <= 1995 ? "’80s–’95" : "New";
+
+function hash(str){ let h = 2166136261; for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(seed){ let s = seed || 1; return () => { s = Math.imul(s ^ (s>>>15), s|1); s ^= s + Math.imul(s ^ (s>>>7), s|61); return ((s ^ (s>>>14)) >>> 0) / 4294967296; }; }
+function tokens(){
+  const cs = getComputedStyle(document.documentElement);
+  return {
+    bronze: cs.getPropertyValue('--bronze').trim(),
+    ink: cs.getPropertyValue('--ink').trim(),
+    dim: cs.getPropertyValue('--ink-faint').trim(),
+    line: cs.getPropertyValue('--line-2').trim(),
+  };
+}
+
+/* ================= ENGRAVED PLATES ================= */
+const P_INK = "#1a1712", P_PAPER = "#f7f4eb", P_BRONZE = "#8a6b2f";
+function plateBase(ctx, W, H, r){
+  ctx.fillStyle = P_PAPER; ctx.fillRect(0,0,W,H);
+  // paper grain
+  ctx.fillStyle = "rgba(26,23,18,.05)";
+  for(let i=0;i<420;i++){ ctx.fillRect(r()*W, r()*H, 1.2, 1.2); }
+  // etched border + corner registration ticks
+  ctx.strokeStyle = P_INK; ctx.lineWidth = 1.4;
+  ctx.strokeRect(W*.055, H*.055, W*.89, H*.89);
+  ctx.lineWidth = 1;
+  [[W*.03,H*.03],[W*.97,H*.03],[W*.03,H*.97],[W*.97,H*.97]].forEach(([x,y])=>{
+    ctx.beginPath(); ctx.moveTo(x-7,y); ctx.lineTo(x+7,y); ctx.moveTo(x,y-7); ctx.lineTo(x,y+7); ctx.stroke();
+  });
+}
+function motifWest(ctx, W, H, r){ // bogolan lozenges
+  const x0 = W*.13, x1 = W*.87, y0 = H*.13, y1 = H*.87;
+  const rows = 4, cols = 4, cw = (x1-x0)/cols, ch = (y1-y0)/rows;
+  ctx.strokeStyle = P_INK; ctx.lineWidth = 1.6;
+  for(let i=0;i<cols;i++) for(let j=0;j<rows;j++){
+    const cx = x0 + (i+.5)*cw, cy = y0 + (j+.5)*ch, w = cw*.38, h = ch*.38;
+    ctx.beginPath(); ctx.moveTo(cx,cy-h); ctx.lineTo(cx+w,cy); ctx.lineTo(cx,cy+h); ctx.lineTo(cx-w,cy); ctx.closePath(); ctx.stroke();
+    if((i+j)%2===0){ ctx.beginPath(); ctx.moveTo(cx,cy-h*.45); ctx.lineTo(cx+w*.45,cy); ctx.lineTo(cx,cy+h*.45); ctx.lineTo(cx-w*.45,cy); ctx.closePath(); ctx.stroke(); }
+    else { ctx.beginPath(); ctx.arc(cx,cy,2.2,0,7); ctx.fillStyle = P_INK; ctx.fill(); }
+  }
+  for(let j=1;j<rows;j++){ const y = y0 + j*ch;
+    ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.lineWidth = .8; ctx.stroke(); ctx.lineWidth = 1.6; }
+}
+function motifCentral(ctx, W, H, r){ // kuba interlace
+  const x0 = W*.13, x1 = W*.87, y0 = H*.14, y1 = H*.86;
+  ctx.strokeStyle = P_INK; ctx.lineWidth = 1.6;
+  const rows = 7, amp = (y1-y0)/rows*.42, seg = (x1-x0)/8;
+  for(let j=0;j<rows;j++){
+    const y = y0 + (j+.5)*(y1-y0)/rows, off = (j%2)*seg*.5;
+    ctx.beginPath();
+    for(let x=x0; x<=x1+1; x+=seg){
+      const up = (Math.round((x-x0)/seg)+j)%2 === 0;
+      ctx.lineTo(Math.min(x+off,x1), y + (up?-amp:amp));
+    }
+    ctx.stroke();
+  }
+}
+function motifEast(ctx, W, H, r){ // chevron & triangle bands
+  const x0 = W*.13, x1 = W*.87, y0 = H*.13, y1 = H*.87;
+  ctx.strokeStyle = P_INK; ctx.fillStyle = P_INK;
+  const bands = 5, bh = (y1-y0)/bands;
+  for(let b=0;b<bands;b++){
+    const yt = y0 + b*bh, n = 8, tw = (x1-x0)/n;
+    if(b%2===0){
+      for(let i=0;i<n;i++){
+        const xa = x0+i*tw;
+        ctx.beginPath(); ctx.moveTo(xa, yt+bh*.82); ctx.lineTo(xa+tw/2, yt+bh*.18); ctx.lineTo(xa+tw, yt+bh*.82);
+        if(i%2===0){ ctx.closePath(); ctx.lineWidth=1.2; ctx.stroke();
+          for(let k=1;k<4;k++){ ctx.beginPath(); ctx.moveTo(xa+k*tw*.12, yt+bh*.82); ctx.lineTo(xa+tw/2, yt+bh*(.18+k*.16)); ctx.stroke(); }
+        } else { ctx.lineWidth=1.6; ctx.stroke(); }
+      }
+    } else {
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x0, yt+bh*.35); ctx.lineTo(x1, yt+bh*.35); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x0, yt+bh*.65); ctx.lineTo(x1, yt+bh*.65); ctx.stroke();
+    }
+  }
+}
+function motifSouthern(ctx, W, H, r){ // ndebele step frames
+  ctx.strokeStyle = P_INK; ctx.lineWidth = 1.6;
+  const cx = W/2, cy = H/2;
+  for(let k=0;k<4;k++){
+    const s = W*(.12 + k*.09);
+    ctx.beginPath();
+    const st = s*.28;
+    ctx.moveTo(cx-s, cy-s+st); ctx.lineTo(cx-s+st, cy-s+st); ctx.lineTo(cx-s+st, cy-s); // step corner TL
+    ctx.lineTo(cx+s-st, cy-s); ctx.lineTo(cx+s-st, cy-s+st); ctx.lineTo(cx+s, cy-s+st);
+    ctx.lineTo(cx+s, cy+s-st); ctx.lineTo(cx+s-st, cy+s-st); ctx.lineTo(cx+s-st, cy+s);
+    ctx.lineTo(cx-s+st, cy+s); ctx.lineTo(cx-s+st, cy+s-st); ctx.lineTo(cx-s, cy+s-st);
+    ctx.closePath(); ctx.stroke();
+  }
+  ctx.beginPath(); ctx.moveTo(cx, cy-W*.055); ctx.lineTo(cx+W*.055, cy); ctx.lineTo(cx, cy+W*.055); ctx.lineTo(cx-W*.055, cy); ctx.closePath(); ctx.stroke();
+}
+function motifNorth(ctx, W, H, r){ // eight-point star / zellige
+  const cx = W/2, cy = H/2, R = W*.30;
+  ctx.strokeStyle = P_INK; ctx.lineWidth = 1.6;
+  [0, Math.PI/4].forEach(rot=>{
+    ctx.beginPath();
+    for(let i=0;i<4;i++){ const a = rot + i*Math.PI/2;
+      const x = cx + Math.cos(a)*R, y = cy + Math.sin(a)*R;
+      i? ctx.lineTo(x,y): ctx.moveTo(x,y);
+      const a2 = rot + (i+1)*Math.PI/2;
+      ctx.lineTo(cx + Math.cos(a2)*R, cy + Math.sin(a2)*R);
+    }
+    ctx.closePath(); ctx.stroke();
+  });
+  ctx.lineWidth = .9;
+  for(let i=0;i<16;i++){ const a = i*Math.PI/8;
+    ctx.beginPath(); ctx.moveTo(cx + Math.cos(a)*R*.42, cy + Math.sin(a)*R*.42);
+    ctx.lineTo(cx + Math.cos(a)*W*.43, cy + Math.sin(a)*W*.43); ctx.stroke(); }
+  ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.arc(cx,cy,R*.34,0,7); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,R*.12,0,7); ctx.stroke();
+}
+function plate(cv, seed, region){
+  const ctx = cv.getContext('2d'); if(!ctx) return;
+  const W = cv.width, H = cv.height, r = rng(seed);
+  plateBase(ctx, W, H, r);
+  ctx.save();
+  ({West:motifWest, Central:motifCentral, East:motifEast, Southern:motifSouthern, North:motifNorth}[region] || motifWest)(ctx, W, H, r);
+  ctx.restore();
+  // single bronze accent
+  const ax = W*(.16 + r()*.68), ay = H*(.16 + r()*.68), s = W*.018;
+  ctx.fillStyle = P_BRONZE;
+  ctx.beginPath(); ctx.moveTo(ax,ay-s); ctx.lineTo(ax+s,ay); ctx.lineTo(ax,ay+s); ctx.lineTo(ax-s,ay); ctx.closePath(); ctx.fill();
+}
+
+/* ================= WAVE TRACE ================= */
+function waveline(cv, seed, color, amp=1){
+  const ctx = cv.getContext('2d'); if(!ctx) return;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const w = cv.clientWidth || 600, h = cv.clientHeight || 48;
+  cv.width = w*dpr; cv.height = h*dpr; ctx.scale(dpr,dpr);
+  const r = rng(seed);
+  const p1 = r()*7, p2 = r()*7, p3 = r()*7, f1 = 2+r()*3, f2 = 6+r()*7, f3 = 18+r()*14;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle = color; ctx.lineWidth = 1.1; ctx.beginPath();
+  for(let x=0;x<=w;x+=2){
+    const t = x/w;
+    const env = Math.sin(Math.PI/2*Math.min(1, t*8)) * Math.sin(Math.PI/2*Math.min(1,(1-t)*8));
+    const y = h/2 + env*amp*(h/2-3)*(
+      .5*Math.sin(t*f1*6.28+p1) + .32*Math.sin(t*f2*6.28+p2) + .18*Math.sin(t*f3*6.28+p3));
+    x? ctx.lineTo(x,y): ctx.moveTo(x,y);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = .4; ctx.lineWidth = .6;
+  ctx.beginPath(); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke(); ctx.globalAlpha = 1;
+}
+
+/* ================= EMOTIONAL PRINT ================= */
+const AXES = ["Joy","Tension","Nostalgia","Sensuality","Power","Serenity"];
+function profileFor(t){
+  const r = rng(hash(t.title));
+  const e = t.energy/100, d = (t.danceability||50)/100;
+  return [
+    .25 + .6*d + .15*r(),
+    .15 + .55*e*(t.key.includes("minor")?1.1:.7) + .2*r(),
+    (t.year < 1996 ? .5 : .2) + .4*r(),
+    .25 + .5*r() + (t.bpm < 100 ? .2 : 0),
+    .2 + .65*e + .15*r(),
+    .15 + .7*(1-e) + .15*r(),
+  ].map(v => Math.max(.12, Math.min(1, v)));
+}
+function radar(cv, vals){
+  const ctx = cv.getContext('2d'); if(!ctx) return;
+  const T = tokens();
+  const W = cv.width, H = cv.height, cx = W/2, cy = H/2, R = W*.3;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+  for(let ring=1; ring<=3; ring++){
+    ctx.beginPath();
+    for(let i=0;i<=6;i++){ const a = i/6*Math.PI*2 - Math.PI/2;
+      const x = cx + Math.cos(a)*R*ring/3, y = cy + Math.sin(a)*R*ring/3;
+      i? ctx.lineTo(x,y) : ctx.moveTo(x,y); }
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  vals.forEach((v,i)=>{ const a = i/6*Math.PI*2 - Math.PI/2;
+    const x = cx + Math.cos(a)*R*v, y = cy + Math.sin(a)*R*v; i? ctx.lineTo(x,y): ctx.moveTo(x,y); });
+  ctx.closePath();
+  ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4; ctx.stroke();
+  vals.forEach((v,i)=>{ const a = i/6*Math.PI*2 - Math.PI/2; ctx.fillStyle = T.bronze;
+    ctx.beginPath(); ctx.arc(cx + Math.cos(a)*R*v, cy + Math.sin(a)*R*v, 3, 0, 7); ctx.fill(); });
+  ctx.fillStyle = T.dim; ctx.font = "500 12px 'Fragment Mono', monospace";
+  AXES.forEach((l,i)=>{ const a = i/6*Math.PI*2 - Math.PI/2;
+    const c = Math.cos(a), s = Math.sin(a);
+    ctx.textAlign = Math.abs(c) < .3 ? 'center' : (c > 0 ? 'left' : 'right');
+    ctx.fillText(l, cx + c*(R+13), cy + s*(R+13) + (Math.abs(s) < .3 ? 4 : (s > 0 ? 14 : -6))); });
+}
+
+/* ================= HERO ================= */
+(function(){
+  const wm = $('#wordmark');
+  function fit(){
+    wm.style.fontSize = '100px';
+    const w = wm.scrollWidth || 1;
+    const target = wm.parentElement.clientWidth * .985;
+    wm.style.fontSize = Math.max(60, 100*target/w) + 'px';
+  }
+  fit();
+  addEventListener('resize', fit);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+
+  const scan = $('#scanTxt');
+  let si = 0;
+  function setScan(){
+    const t = TRACKS[si % TRACKS.length];
+    scan.textContent = `ANALYSING — “${t.title}” · ${t.city.toUpperCase()} ${t.year} · ${t.bpm} BPM · ${t.key.toUpperCase()}`;
+    si++;
+  }
+  setScan();
+  if(!reducedMotion) setInterval(setScan, 3600);
+
+  const tk = $('#ticker');
+  const seq = GENRES.map(g=>`<span>${g}<i>◆</i></span>`).join('');
+  tk.innerHTML = seq + seq;
+})();
+
+/* ================= INSTRUMENT ================= */
+let featured = 0, typeTimer = null;
+const FEAT_DEFAULT = [0, 9, 16, 18, 24];
+function typeText(el, text){
+  clearInterval(typeTimer);
+  if(reducedMotion){ el.textContent = text; return; }
+  el.innerHTML = '<span class="cursor"></span>';
+  let i = 0;
+  typeTimer = setInterval(()=>{
+    i += 3;
+    if(i >= text.length){ el.textContent = text; clearInterval(typeTimer); }
+    else el.innerHTML = text.slice(0,i) + '<span class="cursor"></span>';
+  }, 24);
+}
+function renderInstrument(i){
+  featured = i;
+  const t = TRACKS[i];
+  const seed = hash(t.title);
+  plate($('#dArt'), seed, REGION(t.country));
+  $('#plateCap').innerHTML = `PLATE <b>AS-${String(t.year).slice(2)}-${String(seed%900+100)}</b> · ${REGION(t.country).toUpperCase()} AFRICA · ENGRAVED FROM ${t.year <= 1995 ? '¼&quot; MASTER' : 'DIGITAL MASTER'}`;
+  $('#dTitle').textContent = t.title;
+  $('#dArtist').textContent = `${t.artist} — ${t.genre}`;
+  const fields = [
+    ["Recorded", `${t.year} · ${t.city}, ${t.country}`],
+    ["Label", t.label || "—"],
+    ["Source", t.year <= 1995 ? "¼\" reel-to-reel · restored 2026" : "Digital master · artist upload"],
+    ["Duration", t.duration],
+    ["Rights", "Master + publishing · pre-cleared"],
+  ];
+  $('#dFields').innerHTML = fields.map(f=>`<tr><td>${f[0]}</td><td>${f[1]}</td></tr>`).join('');
+  waveline($('#dWave'), seed, tokens().ink);
+  radar($('#dRadar'), profileFor(t));
+  $('#dKv').innerHTML = [
+    `<span>BPM </span><b>${t.bpm}</b>`, `<span>KEY </span><b>${t.key}</b>`,
+    `<span>INSTR </span><b>${t.instruments.slice(0,3).join(' · ')}</b>`
+  ].map(x=>`<span style="display:inline-flex; gap:.4em">${x}</span>`).join('');
+  $('#dEnV').textContent = t.energy; $('#dEnB').style.width = t.energy + '%';
+  $('#dDaV').textContent = t.danceability || "–"; $('#dDaB').style.width = (t.danceability||0) + '%';
+  $('#dMoods').innerHTML = t.moods.map(m=>`<span>${m}</span>`).join('');
+  typeText($('#dAnalysis'), t.analysis);
+  $('#dSync').textContent = t.syncUse;
+  document.querySelectorAll('#featPicker button').forEach((c,ci)=>{
+    c.setAttribute('aria-pressed', String(FEAT_DEFAULT[ci] === i));
+  });
+  document.querySelectorAll('#grid .row').forEach(rw=>{
+    rw.setAttribute('aria-pressed', String(Number(rw.dataset.i) === i));
+  });
+}
+(function(){
+  const p = $('#featPicker');
+  FEAT_DEFAULT.forEach(i=>{
+    const t = TRACKS[i];
+    const b = document.createElement('button');
+    b.setAttribute('role','tab');
+    b.textContent = `${t.title} — ${t.year}`;
+    b.addEventListener('click', ()=> renderInstrument(i));
+    p.appendChild(b);
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', ()=> renderInstrument(featured));
+})();
+
+/* ================= REGISTRY ================= */
+const state = { region: "All", era: "All", mood: "All" };
+function makeFilters(id, values, key){
+  const box = document.getElementById(id);
+  values.forEach(v=>{
+    const b = document.createElement('button');
+    b.textContent = v; b.dataset.v = v;
+    b.setAttribute('aria-pressed', String(v === "All"));
+    b.addEventListener('click', ()=>{
+      state[key] = v;
+      box.querySelectorAll('button').forEach(c=>c.setAttribute('aria-pressed', String(c === b)));
+      renderGrid();
+    });
+    box.appendChild(b);
+  });
+}
+function renderGrid(){
+  const grid = $('#grid');
+  grid.innerHTML = '';
+  const matches = TRACKS.map((t,i)=>({t,i})).filter(({t}) =>
+    (state.region === "All" || REGION(t.country) === state.region) &&
+    (state.era === "All" || ERA(t.year) === state.era) &&
+    (state.mood === "All" || t.moods.includes(state.mood))
+  );
+  $('#count').innerHTML = `Showing <b>${matches.length}</b> of ${TRACKS.length} recordings — proof-of-concept sample of the full catalogue`;
+  matches.forEach(({t,i}, idx)=>{
+    const el = document.createElement('button');
+    el.className = 'row'; el.dataset.i = i;
+    el.setAttribute('aria-pressed', String(i === featured));
+    el.innerHTML = `
+      <span class="no">${String(idx+1).padStart(3,'0')}</span>
+      <span class="tt">${t.title}<small>${t.artist}</small></span>
+      <span class="meta"><b>${t.city}, ${t.country} ${t.year}</b><br><span class="genre">${t.genre}</span> · ${t.bpm} BPM · ${t.key}</span>`;
+    el.addEventListener('click', ()=>{
+      renderInstrument(i);
+      document.getElementById('analysis').scrollIntoView({behavior: reducedMotion ? 'auto' : 'smooth'});
+    });
+    grid.appendChild(el);
+  });
+}
+(function(){
+  makeFilters('regionFilters', ["All","West","Central","East","Southern","North"], 'region');
+  makeFilters('eraFilters', ["All","’58–’69","’70s","’80s–’95","New"], 'era');
+  const moods = {};
+  TRACKS.forEach(t => t.moods.forEach(m => moods[m] = (moods[m]||0)+1));
+  const top = Object.entries(moods).sort((a,b)=>b[1]-a[1]).slice(0,9).map(x=>x[0]);
+  makeFilters('moodFilters', ["All", ...top], 'mood');
+  renderGrid();
+  renderInstrument(FEAT_DEFAULT[0]);
+})();
+
+/* ================= STEMS ================= */
+(function(){
+  const LANES = [
+    {nm:"Vocals", seed: 11, ck:'bronze'},
+    {nm:"Drums & perc", seed: 23, ck:'ink'},
+    {nm:"Bass", seed: 37, ck:'ink'},
+    {nm:"Guitars & horns", seed: 53, ck:'dim'},
+  ];
+  const box = $('#lanes');
+  const laneEls = [];
+  LANES.forEach(l=>{
+    const el = document.createElement('div');
+    el.className = 'lane';
+    el.innerHTML = `
+      <div><span class="nm">${l.nm}</span><span class="fmt">24-BIT WAV · KEY-MATCHED</span></div>
+      <canvas height="40" aria-hidden="true"></canvas>
+      <div class="ctl">
+        <button aria-pressed="false" data-a="mute" aria-label="Mute ${l.nm}">MUTE</button>
+        <button aria-pressed="false" data-a="solo" aria-label="Solo ${l.nm}">SOLO</button>
+      </div>`;
+    box.appendChild(el);
+    laneEls.push({el, ...l, muted:false, solo:false});
+  });
+  function drawAll(){
+    const T = tokens();
+    laneEls.forEach(L=> waveline(L.el.querySelector('canvas'), L.seed, T[L.ck], 1.15));
+  }
+  drawAll();
+  addEventListener('resize', drawAll);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', drawAll);
+  function applyState(){
+    const anySolo = laneEls.some(L=>L.solo);
+    laneEls.forEach(L=>{
+      const audible = anySolo ? L.solo : !L.muted;
+      L.el.classList.toggle('muted', !audible);
+      L.el.querySelector('[data-a="mute"]').setAttribute('aria-pressed', String(L.muted));
+      L.el.querySelector('[data-a="solo"]').setAttribute('aria-pressed', String(L.solo));
+    });
+  }
+  laneEls.forEach(L=>{
+    L.el.querySelector('[data-a="mute"]').addEventListener('click', ()=>{ L.muted = !L.muted; applyState(); });
+    L.el.querySelector('[data-a="solo"]').addEventListener('click', ()=>{ L.solo = !L.solo; applyState(); });
+  });
+  const ph = $('#playhead'); const btn = $('#playBtn'); const icon = $('#playIcon');
+  let playing = false, raf, start;
+  function tick(ts){
+    if(!start) start = ts;
+    const dur = 24000;
+    const p = ((ts - start) % dur) / dur;
+    const laneRect = box.getBoundingClientRect();
+    const cv = laneEls[0].el.querySelector('canvas').getBoundingClientRect();
+    const left = cv.left - laneRect.left;
+    ph.style.left = (left + p * cv.width) + 'px';
+    raf = requestAnimationFrame(tick);
+  }
+  btn.addEventListener('click', ()=>{
+    playing = !playing;
+    icon.textContent = playing ? '❚❚' : '▶';
+    btn.setAttribute('aria-label', playing ? 'Pause preview' : 'Play preview');
+    ph.style.opacity = playing ? 1 : 0;
+    if(playing && !reducedMotion){ start = null; raf = requestAnimationFrame(tick); }
+    else cancelAnimationFrame(raf);
+    if(playing && reducedMotion) ph.style.left = '50%';
+  });
+})();
+
+/* ================= STATIC SECTIONS ================= */
+$('#audRow').innerHTML = AUDIENCES.map(a=>`<div><h3>${a.name}</h3><p>${a.line}</p></div>`).join('');
+$('#stepsRow').innerHTML = STEPS.map((s,i)=>`
+  <div class="step"><span class="n">0${i+1}</span><h3>${s.title}</h3><p>${s.body}</p></div>`).join('');
+$('#tiersRow').innerHTML = TIERS.map(t=>`
+  <div class="tier${t.hot?' hot':''}">
+    <h3>${t.name}</h3><div class="pr">${t.price}</div><p class="who">${t.who}</p>
+    <ul>${t.feats.map(f=>`<li>${f}</li>`).join('')}</ul>
+    <a class="boxed${t.hot?' fill':''}" href="#access">License a track</a>
+  </div>`).join('');
+(function(){
+  const row = $('#spotsRow');
+  SPOTLIGHTS.forEach(s=>{
+    const el = document.createElement('article');
+    el.className = 'spot';
+    const regions = {"Accra, Ghana":"West","Addis Ababa, Ethiopia":"East","Soweto, Johannesburg":"Southern"};
+    el.innerHTML = `
+      <canvas width="560" height="700" aria-hidden="true"></canvas>
+      <div class="meta">${s.origin} · ${s.era}</div>
+      <h3>${s.artist}</h3>
+      <p>${s.story}</p>`;
+    plate(el.querySelector('canvas'), hash(s.artist), regions[s.origin] || "West");
+    row.appendChild(el);
+  });
+})();
+
+/* ================= TOAST / CTA ================= */
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 3200);
+}
+$('#ctaForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  toast("THIS IS A PROOF-OF-CONCEPT MOCKUP — NO DATA IS SENT ANYWHERE.");
+});
+
+/* ================= SCROLL REVEAL ================= */
+(function(){
+  const els = document.querySelectorAll('.rv');
+  if(reducedMotion || !('IntersectionObserver' in window)){ els.forEach(e=>e.classList.add('on')); return; }
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('on'); io.unobserve(en.target); } });
+  }, {threshold: .1});
+  els.forEach(e=>io.observe(e));
+})();
+</script>
